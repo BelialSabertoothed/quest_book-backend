@@ -59,8 +59,7 @@ const toggleComplete: RequestHandler<ToggleTaskParams> = async (req, res) => {
     const task = await prisma.task.findUnique({ where: { id } });
 
     if (!task) {
-      res.status(404).json({ error: 'Task not found' });
-      return;
+      return res.status(404).json({ error: 'Task not found' });
     }
 
     const today = new Date().toISOString().split('T')[0];
@@ -69,7 +68,8 @@ const toggleComplete: RequestHandler<ToggleTaskParams> = async (req, res) => {
     const completedDate = task.completedAt?.toISOString().split('T')[0];
     const alreadyCompletedToday = completedDate === today;
 
-    const shouldUncomplete = wasCompleted && isRepeat && alreadyCompletedToday;
+    const shouldUncomplete =
+      wasCompleted && isRepeat && alreadyCompletedToday;
 
     const updatedTask = await prisma.task.update({
       where: { id },
